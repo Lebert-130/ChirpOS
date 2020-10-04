@@ -4,10 +4,12 @@ YELL='\033[1;33m'
 GRN='\033[0;32m'
 CYAN='\033[0;36m'
 LGRN='\033[1;32m'
-NC='\033[0m'
+RED='\033[0;31m'
+NC='\033[0m' # NO COLOR
 
+echo -e "${RED}------------------------------------------------------------${NC}"
 # COMPILE BOOT.O
-echo -e "\n${CYAN}Compiling bootstrap asm...${NC}"
+echo -e "${CYAN}Compiling bootstrap asm...${NC}"
 i686-elf-as boot.s -o boot.o
 echo -e "${LGRN}Done!${NC}"
 
@@ -30,4 +32,5 @@ sudo cp grub.cfg ChirpISO/boot/grub/grub.cfg
 # COMPILE ISO FILE
 echo -e "${CYAN}Building ISO file...${NC}"
 sudo grub-mkrescue -o ChirpOS.iso ChirpISO
-echo -e "${YELL}Build done!\n${NC}"
+echo -e "${YELL}Build done!${NC}"
+echo -e "${RED}------------------------------------------------------------${NC}"
