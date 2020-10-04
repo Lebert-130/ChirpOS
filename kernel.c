@@ -85,11 +85,23 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
  
 void terminal_putchar(char c) 
 {
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
-		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
+	switch(c)
+	{
+		case '\n':
+			terminal_row++;
+            terminal_column = 0;
+            break;
+		case '\t':
+			terminal_column += 4;
+            break;
+		default:
+			terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+            if (++terminal_column == VGA_WIDTH) 
+            {
+                terminal_column = 0;
+                if (++terminal_row == VGA_HEIGHT)
+                    terminal_row = 0;
+            }
 	}
 }
  
@@ -110,5 +122,24 @@ void kernel_main(void)
 	terminal_initialize();
  
 	/* Newline support is left as an exercise. */
-	terminal_writestring("Hello, kernel World!\n");
+	terminal_writestring("Hello, kernel World!\nTest\tTest");
+}
+
+int main() 
+{
+	return 0;
+}
+
+void exit()
+{
+	if (main() == 0)
+	{
+		kernel_main();
+	}
+	else
+	{
+		terminal_initialize();
+		terminal_writestring("ERROR!\nBruh Momento #2");
+	}
+	
 }

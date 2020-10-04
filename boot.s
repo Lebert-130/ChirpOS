@@ -78,17 +78,27 @@ _start:
 	C++ features such as global constructors and exceptions will require
 	runtime support to work as well.
 	*/
-	
-	/*
-	Enter the high-level kernel. The ABI requires the stack is 16-byte
-	aligned at the time of the call instruction (which afterwards pushes
-	the return pointer of size 4 bytes). The stack was originally 16-byte
-	aligned above and we've pushed a multiple of 16 bytes to the
-	stack since (pushed 0 bytes so far), so the alignment has thus been
-	preserved and the call is well defined.
-	*/
-	
-	call kernel_main
+
+	# Set up end of the stack frame linked list.
+	movl $0, %ebp
+	pushl %ebp # eip=0
+	pushl %ebp # ebp=0
+	movl %esp, %ebp
+
+	# We need those in a moment when we call main.
+	pushl %esi
+	pushl %edi
+
+	# Restore argc and argv.
+	popl %edi
+	popl %esi
+
+	# Run main
+	call main
+
+	# Terminate the process with the exit code.
+	movl %eax, %edi
+	call exit
 	
 	/*
 	If the system has nothing more to do, put the computer into an
