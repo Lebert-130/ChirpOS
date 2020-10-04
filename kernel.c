@@ -137,7 +137,7 @@ void terminal_putchar(char c)
 	{
         terminal_scroll();
 
-        terminal_row = VGA_HEIGHT;
+        terminal_row = VGA_HEIGHT - 1;
     }
 }
  
