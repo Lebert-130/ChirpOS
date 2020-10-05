@@ -27,14 +27,12 @@ CPPFLAGS:=$(CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
 LDFLAGS:=$(LDFLAGS) $(KERNEL_ARCH_LDFLAGS)
 LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 
-KERNEL_OBJS=\
-$(KERNEL_ARCH_OBJS) \
-kernel/kernel.o \
-
 OBJS=\
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
-$(KERNEL_OBJS) \
+$(ARCHDIR)/boot.o \
+$(ARCHDIR)/tty.o \
+kernel/kernel.o \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
@@ -42,7 +40,9 @@ LINK_LIST=\
 $(LDFLAGS) \
 $(ARCHDIR)/crti.o \
 $(ARCHDIR)/crtbegin.o \
-$(KERNEL_OBJS) \
+$(ARCHDIR)/boot.o \
+$(ARCHDIR)/tty.o \
+kernel/kernel.o \
 $(LIBS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
