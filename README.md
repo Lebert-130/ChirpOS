@@ -1,3 +1,1 @@
-# ChirpOS
-
-made a deal with Aesthethical, but you aren't gonna get info in how to build, unless we both agree to show you how to build, but this OS is currently bad lol
+![Image](https://raw.githubusercontent.com/Lebert130/lebert130.github.io/master/assets/image/chirpOS/logo.png)
