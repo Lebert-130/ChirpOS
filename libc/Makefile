@@ -8,7 +8,7 @@ LDFLAGS?=
 LIBS?=
 
 DESTDIR?=
-PREFIX?=/mnt/c/chripOS/libc
+PREFIX?=/usr/local
 EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
