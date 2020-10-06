@@ -8,7 +8,7 @@ LDFLAGS?=
 LIBS?=
 
 DESTDIR?=
-PREFIX?=/usr/local
+PREFIX?=/mnt/c/chripOS/libc
 EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
@@ -38,6 +38,7 @@ string/memcpy.o \
 string/memmove.o \
 string/memset.o \
 string/strlen.o \
+test.o \
 
 HOSTEDOBJS=\
 $(ARCH_HOSTEDOBJS) \
