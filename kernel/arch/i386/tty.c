@@ -4,7 +4,6 @@
 #include <string.h>
  
 #include <kernel/tty.h>
-#include <kernel/io.h>
  
 #include "vga.h"
  
@@ -16,6 +15,23 @@ static size_t terminal_row;
 static size_t terminal_column;
 static uint8_t terminal_color;
 static uint16_t* terminal_buffer;
+
+//TEMPORAL FUNCS
+inline void outb(uint16_t port, uint8_t value)
+{
+    __asm("outb %b0, %w1"
+        :: "a"(value), "d"(port));
+}
+
+static inline uint8_t inb(uint16_t port)
+{
+    uint8_t ret;
+    asm volatile ( "inb %1, %0"
+                   : "=a"(ret)
+                   : "Nd"(port) );
+    return ret;
+}
+//TEMPORAL FUNCS--
  
 void terminal_initialize(void) 
 {
@@ -122,10 +138,7 @@ void terminal_putchar(char c)
 void terminal_write(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
-	{
 		terminal_putchar(data[i]);
-	}
-	terminal_set_cursor(terminal_column, terminal_row);
 }
  
 void terminal_writestring(const char* data) 
