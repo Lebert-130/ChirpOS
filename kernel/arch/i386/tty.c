@@ -16,6 +16,8 @@ static size_t terminal_row;
 static size_t terminal_column;
 static uint8_t terminal_color;
 static uint16_t* terminal_buffer;
+
+volatile unsigned char ScanCode;
  
 void terminal_initialize(void) 
 {
@@ -65,6 +67,21 @@ void disable_cursor()
 {
 	outb(0x3D4, 0x0A);
 	outb(0x3D5, 0x20);
+}
+
+void irq_01()
+{
+	outb(0x20, 0x20); // Send EOI
+	ScanCode = inb(0x60);
+	if((ScanCode & 128) == 128)
+	{
+		terminal_putchar('e'); //Released
+	}
+	else
+	{
+		terminal_putchar('a'); //Pressed
+	}
+	
 }
 
 void terminal_scroll()
@@ -124,6 +141,7 @@ void terminal_write(const char* data, size_t size)
 	for (size_t i = 0; i < size; i++)
 	{
 		terminal_putchar(data[i]);
+		irq_01();
 	}
 	terminal_set_cursor(terminal_column, terminal_row);
 }
