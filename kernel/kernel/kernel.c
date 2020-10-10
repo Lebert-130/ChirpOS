@@ -33,6 +33,7 @@ void itoa(int n, char s[])
  
 void kernel_main(void) 
 {
+    NMI_disable(); //disable Non Maskable Interrupt to go to Protected mode
 	terminal_initialize();
 
 	int i = 42;
