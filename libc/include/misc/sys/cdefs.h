@@ -72,4 +72,6 @@
 # define __attribute__(xyz)        /* Ignore */
 #endif
 
+#define __extension__
+
 #endif
