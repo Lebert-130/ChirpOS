@@ -23,8 +23,24 @@ stack_top:
 .section .text
 .global _start
 .type _start, @function
+
+gdtr:
+limit:	.word 0 # For limit
+base:	.long 0 # For base storage
+
 _start:
 	movl $stack_top, %esp
+
+	# Enable A20
+	inb $0x92, %al
+	orb $2, %al
+	outb %al, $0x92
+
+	# Set GDT
+	call setGdt
+
+	# Enter Protected Mode
+	call enterPrt
 
 	# Call the global constructors.
 	call _init
@@ -37,3 +53,26 @@ _start:
 1:	hlt
 	jmp 1b
 .size _start, . - _start
+
+setGdt:
+	movl 4(%esp),	%eax
+	movl %eax,	base
+	movw 8(%esp),	%ax
+	movw %ax,	gdtr
+	lgdt gdtr
+	ret
+
+enterPrt:
+	cli # Disable interrupts
+	lgdt gdtr # Load GDT register with start address of Global Descriptor Table
+	movl %cr0, %eax
+	orb $1, %al # set PE (Protection Enable) bit in CR0 (Control Register 0)
+	movl %eax, %cr0
+
+	# Perform far jump to selector 08h (offset into GDT, pointing at a 32bit PM code segment descriptor)
+	# to load CS with proper PM32 descriptor
+
+	jmp PModeMain
+
+PModeMain:
+# Load DS, ES, FS, GS, SS, ESP
