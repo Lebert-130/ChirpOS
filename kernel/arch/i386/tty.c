@@ -69,17 +69,27 @@ void disable_cursor()
 	outb(0x3D5, 0x20);
 }
 
+void NMI_enable()
+{
+	outb(0x70, inb(0x70) & 0x7F);
+}
+
+void NMI_disable()
+{
+	outb(0x70, inb(0x70) | 0x80);
+}
+
 void irq_01()
 {
 	outb(0x20, 0x20); // Send EOI
 	ScanCode = inb(0x60);
 	if((ScanCode & 128) == 128)
 	{
-		terminal_putchar('e'); //Released
+		terminal_putchar('e'); //A Released
 	}
 	else
 	{
-		terminal_putchar('a'); //Pressed
+		terminal_putchar('a'); //A Pressed
 	}
 	
 }
