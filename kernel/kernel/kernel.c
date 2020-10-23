@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <kernel/tty.h>
+#include <kernel/io.h>
+#include <kernel/keyboard_input.h>
 
 #include <string.h>
 
@@ -34,12 +36,10 @@ void itoa(int n, char s[])
 void kernel_main(void) 
 {
     NMI_disable(); //disable Non Maskable Interrupt to go to Protected mode
+
 	terminal_initialize();
 
-	int i = 42;
-	char buffer [33];
+    printf("Starting ChirpOS...\n\n>");
 
-	itoa(i, buffer);
-
-	printf(buffer);
+    keyboard_input();
 }
