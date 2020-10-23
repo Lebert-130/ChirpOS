@@ -23,6 +23,8 @@ static size_t terminal_column;
 static uint8_t terminal_color;
 static uint16_t* terminal_buffer;
 
+size_t current_pos = 2;
+
 volatile unsigned char ScanCode;
  
 void terminal_initialize(void) 
@@ -159,9 +161,14 @@ void terminal_putchar(char c)
     }
 }
 
+void change_current_pos()
+{
+	current_pos += 2;
+}
+
 void terminal_removechar()
 {
-	if (terminal_row > 2)
+	if (terminal_row > current_pos)
 	{
 		const size_t index = terminal_row * VGA_WIDTH + terminal_column;
 		terminal_buffer[index-1] = vga_entry(' ', terminal_color);
