@@ -34,6 +34,7 @@ $(ARCHDIR)/boot.o \
 $(ARCHDIR)/tty.o \
 kernel/kernel.o \
 kernel/keyboard.o \
+kernel/commands.o \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
 
@@ -45,6 +46,7 @@ $(ARCHDIR)/boot.o \
 $(ARCHDIR)/tty.o \
 kernel/kernel.o \
 kernel/keyboard.o \
+kernel/commands.o \
 $(LIBS) \
 $(ARCHDIR)/crtend.o \
 $(ARCHDIR)/crtn.o \
