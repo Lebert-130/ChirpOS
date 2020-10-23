@@ -7,6 +7,12 @@
 #include <kernel/io.h>
  
 #include "vga.h"
+
+#define PIC1 0x20
+#define PIC2 0xA0
+
+#define ICW1 0x11
+#define ICW4 0x01
  
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
@@ -79,19 +85,26 @@ void NMI_disable()
 	outb(0x70, inb(0x70) | 0x80);
 }
 
-void irq_01()
+void init_pics(int pic1, int pic2)
 {
-	outb(0x20, 0x20); // Send EOI
-	ScanCode = inb(0x60);
-	if((ScanCode & 128) == 128)
-	{
-		terminal_putchar('e'); //A Released
-	}
-	else
-	{
-		terminal_putchar('a'); //A Pressed
-	}
-	
+	/* send ICW1 */
+	outb(PIC1, ICW1);
+	outb(PIC2, ICW1);
+
+	/* send ICW2 */
+	outb(PIC1 + 1, pic1);
+	outb(PIC2 + 1, pic2);
+
+	/* send ICW3 */
+    outb(PIC1 + 1, 4);   
+    outb(PIC2 + 1, 2);
+
+   	/* send ICW4 */
+    outb(PIC1 + 1, ICW4);
+    outb(PIC2 + 1, ICW4);
+
+	/* disable all IRQs */
+    outb(PIC1 + 1, 0xFF);
 }
 
 void terminal_scroll()
@@ -145,13 +158,45 @@ void terminal_putchar(char c)
         terminal_row = VGA_HEIGHT - 1;
     }
 }
+
+void terminal_removechar()
+{
+	if (terminal_row > 2)
+	{
+		const size_t index = terminal_row * VGA_WIDTH + terminal_column;
+		terminal_buffer[index-1] = vga_entry(' ', terminal_color);
+
+		terminal_column -= 1;
+
+		terminal_set_cursor(terminal_column, terminal_row);
+	}
+	else
+	{
+		if (terminal_column != 1)
+		{
+			const size_t index = terminal_row * VGA_WIDTH + terminal_column;
+			terminal_buffer[index-1] = vga_entry(' ', terminal_color);
+
+			terminal_column -= 1;
+
+			terminal_set_cursor(terminal_column, terminal_row);
+		}
+	}
+
+	if (terminal_column == 0 && terminal_row != 0)
+	{
+		terminal_column = VGA_WIDTH;
+		terminal_row -= 1;
+
+		terminal_set_cursor(terminal_column, terminal_row);
+	}
+}
  
 void terminal_write(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
 	{
 		terminal_putchar(data[i]);
-		irq_01();
 	}
 	terminal_set_cursor(terminal_column, terminal_row);
 }
