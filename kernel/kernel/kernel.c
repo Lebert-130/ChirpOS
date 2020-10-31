@@ -3,6 +3,7 @@
 #include <kernel/io.h>
 #include <kernel/keyboard_input.h>
 
+#include <sys/wait.h>
 #include <string.h>
 
 void reverse(char s[])
@@ -39,7 +40,11 @@ void kernel_main(void)
 
 	terminal_initialize();
 
-    printf("Starting ChirpOS...\n\n>");
+    printf("Starting ChirpOS...\n\n");
+
+    wait(1000);
+
+    printf(">");
 
     keyboard_input();
 }
