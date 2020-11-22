@@ -14,6 +14,14 @@ void clear_chars(int commandID)
             read_chars[i] = ' ';
         }
     }
+
+    if (commandID == 1) //echo
+    {
+        for (int i = 0; i < 50; i++)
+        {
+            read_chars[i] = ' ';
+        }
+    }
 }
 
 void keyboard_input()
